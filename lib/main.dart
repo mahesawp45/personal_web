@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Mahesa WP',
       debugShowCheckedModeBanner: false,
-      theme: Resource.appTheme.getTheme(isDark: true),
+      theme: Resource.appTheme.getTheme(isDark: false),
       home: const HomePage(),
     );
   }

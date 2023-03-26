@@ -6,7 +6,7 @@ class AppTheme {
   ThemeData getTheme({required bool isDark}) {
     return ThemeData(
       useMaterial3: true,
-      textTheme: GoogleFonts.montserratTextTheme(),
+      textTheme: GoogleFonts.poppinsTextTheme(),
       colorScheme: ColorScheme.fromSwatch(
         accentColor: Colors.transparent,
         backgroundColor: Colors.transparent,

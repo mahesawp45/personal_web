@@ -15,16 +15,12 @@ class MainMenuButton extends StatelessWidget {
       width: size ?? 45,
       height: size ?? 45,
       decoration: BoxDecoration(
+        border: Border.all(
+          color: Resource.appColors.darkBgColor,
+          width: 1,
+        ),
         borderRadius: BorderRadius.circular(100),
         color: Resource.appColors.yellowColor,
-        // boxShadow: [
-        //   BoxShadow(
-        //     color: Colors.yellow.shade500,
-        //     blurRadius: 10,
-        //     spreadRadius: 2,
-        //     offset: const Offset(0, 0),
-        //   )
-        // ],
       ),
     );
   }

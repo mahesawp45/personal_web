@@ -1,7 +1,12 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:my_web_porto/pages/sub/contact_page.dart';
+import 'package:my_web_porto/pages/sub/gallery_page.dart';
 
 import 'package:my_web_porto/pages/sub/porto_page.dart';
 import 'package:my_web_porto/pages/sub/welcome_page.dart';
@@ -16,18 +21,15 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int? height;
-  int? weight;
-  int? age;
-
   final PageController _pageController = PageController();
   String? title;
   int index = 0;
-  bool _isActive = false;
+  bool _isActivePorto = false;
+  bool _isActiveGallery = false;
+  bool _isActiveContact = false;
   bool _isHoveringPorto = false;
   bool _isHoveringGallery = false;
-  final bool _isHoveringArt = false;
-  final bool _isHoveringContact = false;
+  bool _isHoveringContact = false;
 
   @override
   void initState() {
@@ -36,33 +38,35 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void dispose() {
+    _pageController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final widthTombol = MediaQuery.of(context).size.width;
-    var paddingTop = MediaQuery.of(context).padding.top;
-    var spacerMenu = MediaQuery.of(context).size.height * 0.1;
-
     return Scaffold(
       body: LayoutBuilder(builder: (context, constraint) {
-        return Row(
+        return Stack(
           children: [
-            Expanded(
-              flex: 1,
-              child: _buildSideMenu(
-                paddingTop,
-                spacerMenu,
-                context,
-                constraint,
-                index: index,
-                pageController: _pageController,
-              ),
-            ),
-            Expanded(
-              flex: constraint.maxWidth < 992 ? 4 : 8,
-              child: _buildHomeScreen(),
+            Row(
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: _buildSideMenu(
+                    constraint,
+                    index: index,
+                    pageController: _pageController,
+                  ),
+                ),
+                VerticalDivider(
+                  color: Resource.appColors.darkBgColor,
+                  width: 1,
+                ),
+                Expanded(
+                  flex: constraint.maxWidth < 992 ? 4 : 8,
+                  child: _buildHomeScreen(),
+                ),
+              ],
             ),
           ],
         );
@@ -71,19 +75,14 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildSideMenu(
-    double paddingTop,
-    double spacerMenu,
-    BuildContext context,
     BoxConstraints constraint, {
     required PageController pageController,
     required int index,
   }) {
-    double height = MediaQuery.of(context).size.height;
+    var paddingTop = MediaQuery.of(context).padding.top;
 
     return Container(
-      decoration: BoxDecoration(
-        color: Resource.appColors.bgColor3,
-      ),
+      decoration: const BoxDecoration(),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -96,9 +95,15 @@ class _HomePageState extends State<HomePage> {
               onTap: () {
                 index = 0;
 
+                _isActivePorto = false;
+
+                _isActiveGallery = false;
+
+                _isActiveContact = false;
+
                 pageController.animateToPage(
                   index,
-                  duration: const Duration(milliseconds: 500),
+                  duration: const Duration(milliseconds: 300),
                   curve: Curves.easeInOut,
                 );
                 setState(() {});
@@ -109,22 +114,27 @@ class _HomePageState extends State<HomePage> {
           Expanded(
             child: Padding(
               padding: EdgeInsets.symmetric(
-                horizontal: constraint.maxWidth < 992 ? 10 : 20,
+                horizontal: constraint.maxWidth < 992 ? 10 : 5,
                 vertical: 20,
               ),
               child: Column(
                 children: [
                   MenuButton(
-                    isClicked: _isActive,
+                    isClicked: _isActivePorto,
                     isHover: _isHoveringPorto,
                     label: "Portfolio Apps",
                     onTap: () {
                       setState(() {
                         index = 1;
-                        _isActive = index == 1;
+                        _isActivePorto = true;
+
+                        _isActiveGallery = false;
+
+                        _isActiveContact = false;
+
                         pageController.animateToPage(
                           index,
-                          duration: const Duration(milliseconds: 500),
+                          duration: const Duration(milliseconds: 300),
                           curve: Curves.easeInOut,
                         );
                       });
@@ -137,12 +147,24 @@ class _HomePageState extends State<HomePage> {
                     }),
                   ),
                   MenuButton(
-                    isClicked: _isActive,
+                    isClicked: _isActiveGallery,
                     isHover: _isHoveringGallery,
                     label: "Personal Gallery",
                     onTap: () {
-                      index = 2;
-                      _isActive = index == 2;
+                      setState(() {
+                        index = 2;
+                        _isActiveGallery = true;
+
+                        _isActivePorto = false;
+
+                        _isActiveContact = false;
+
+                        pageController.animateToPage(
+                          index,
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeInOut,
+                        );
+                      });
                     },
                     onEnter: (_) => setState(() {
                       _isHoveringGallery = true;
@@ -151,34 +173,37 @@ class _HomePageState extends State<HomePage> {
                       _isHoveringGallery = false;
                     }),
                   ),
-                  GestureDetector(
-                    child: Container(
-                      margin: const EdgeInsets.only(bottom: 20),
-                      child: Text(
-                        "Fun Art",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Resource.appColors.primaryTextColor,
-                        ),
-                      ),
-                    ),
-                  ),
-                  GestureDetector(
-                    child: Container(
-                      margin: const EdgeInsets.only(bottom: 20),
-                      child: Text(
-                        "Contact",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Resource.appColors.primaryTextColor,
-                        ),
-                      ),
-                    ),
+                  MenuButton(
+                    isClicked: _isActiveContact,
+                    isHover: _isHoveringContact,
+                    label: Resource.appLabel.contact,
+                    onTap: () {
+                      setState(() {
+                        index = 3;
+                        _isActiveContact = true;
+
+                        _isActivePorto = false;
+
+                        _isActiveGallery = false;
+
+                        pageController.animateToPage(
+                          index,
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeInOut,
+                        );
+                      });
+                    },
+                    onEnter: (_) => setState(() {
+                      _isHoveringContact = true;
+                    }),
+                    onExit: (_) => setState(() {
+                      _isHoveringContact = false;
+                    }),
                   ),
                   Expanded(
                     child: SizedBox(
                       child: VerticalDivider(
-                        color: Resource.appColors.primaryTextColor,
+                        color: Resource.appColors.darkBgColor,
                         width: 2,
                       ),
                     ),
@@ -208,10 +233,7 @@ class _HomePageState extends State<HomePage> {
         Expanded(
           flex: 2,
           child: Container(
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              color: Resource.appColors.bgColor3,
-            ),
+            decoration: const BoxDecoration(),
             child: PageView(
               physics: const NeverScrollableScrollPhysics(),
               scrollDirection: Axis.vertical,
@@ -219,15 +241,22 @@ class _HomePageState extends State<HomePage> {
               children: const [
                 WelcomePage(),
                 PortoPage(),
+                GalleryPage(),
+                ContactPage(),
               ],
             ),
           ),
         ),
         Container(
           height: height,
-          margin: const EdgeInsets.only(left: 10),
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
+            border: Border(
+              left: BorderSide(
+                color: Resource.appColors.darkBgColor,
+                width: 1,
+              ),
+            ),
             color: Resource.appColors.yellowColor,
           ),
           child: Image.asset(
@@ -263,31 +292,47 @@ class MenuButton extends StatelessWidget {
   Widget build(BuildContext context) {
     Color handleColor() {
       if (isHover) {
-        return Resource.appColors.primaryTextColor;
+        return Resource.appColors.darkBgColor;
       }
 
       if (isClicked) {
-        return Resource.appColors.primaryTextColor;
+        return Resource.appColors.darkBgColor;
       }
 
-      return Resource.appColors.primaryTextColor.withOpacity(0.8);
+      return Resource.appColors.darkBgColor.withOpacity(0.8);
     }
 
-    return MouseRegion(
-      onEnter: onEnter,
-      onExit: onExit,
-      cursor: SystemMouseCursors.click,
-      child: GestureDetector(
-        onTap: onTap,
-        child: Container(
-          margin: const EdgeInsets.only(bottom: 20),
-          child: Text(
-            label,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: handleColor(),
+    return Transform.rotate(
+      angle: -90 * pi / 180,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 40),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            MouseRegion(
+              onEnter: onEnter,
+              onExit: onExit,
+              cursor: SystemMouseCursors.click,
+              child: GestureDetector(
+                onTap: onTap,
+                child: Container(
+                  margin: const EdgeInsets.only(bottom: 5),
+                  child: AnimatedSize(
+                    duration: const Duration(milliseconds: 100),
+                    curve: Curves.fastOutSlowIn,
+                    child: Text(
+                      label,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: isClicked ? 20 : 10,
+                        color: handleColor(),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );

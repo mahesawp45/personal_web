@@ -8,13 +8,60 @@ class PortoPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: const BoxDecoration(
-        color: Colors.red,
+    var height = MediaQuery.of(context).size.height;
+    var width = MediaQuery.of(context).size.width;
+
+    return ConstrainedBox(
+      constraints: BoxConstraints(
+        maxHeight: height,
+        maxWidth: width,
       ),
-      child: Text(
-        Resource.appDummy.lorem,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: Container(
+              width: width,
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Resource.appColors.blueColor,
+                border: Border(
+                  top: BorderSide(
+                    color: Resource.appColors.darkBgColor,
+                    width: 0.5,
+                  ),
+                  bottom: BorderSide(
+                    color: Resource.appColors.darkBgColor,
+                    width: 0.5,
+                  ),
+                ),
+              ),
+              child: Column(
+                children: const [
+                  Text("Website"),
+                ],
+              ),
+            ),
+          ),
+          Expanded(
+            child: Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Resource.appColors.greenColor,
+                border: Border(
+                  top: BorderSide(
+                    color: Resource.appColors.darkBgColor,
+                    width: 0.5,
+                  ),
+                  bottom: BorderSide(
+                    color: Resource.appColors.darkBgColor,
+                    width: 0.5,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
