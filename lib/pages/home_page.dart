@@ -209,12 +209,21 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  CupertinoSwitch(
-                    activeColor: Colors.white,
-                    trackColor: Colors.white,
-                    thumbColor: Resource.appColors.yellowColor,
-                    value: false,
-                    onChanged: (value) {},
+                  Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Resource.appColors.darkBgColor,
+                        width: 1,
+                      ),
+                      borderRadius: BorderRadius.circular(100),
+                    ),
+                    child: CupertinoSwitch(
+                      activeColor: Colors.white,
+                      trackColor: Colors.white,
+                      thumbColor: Resource.appColors.yellowColor,
+                      value: false,
+                      onChanged: (value) {},
+                    ),
                   ),
                 ],
               ),
